@@ -8,6 +8,7 @@ local Screensaver = require("ui/screensaver")
 local _ = require("gettext")
 local lfs = require("libs/libkoreader-lfs")
 local utils = require("utils")
+local clipper = require("clipper")
 
 local HighlightScreensaver = WidgetContainer:extend({
 	name = "Highlight Screensaver",
@@ -43,6 +44,9 @@ end
 
 function HighlightScreensaver:scanHighlights()
 	local sidecars = utils.getAllSidecarPaths()
+	for _, sidecar in ipairs(sidecars) do
+		clipper.extractClippingsFromSidecar(sidecar)
+	end
 	local sidecar_strings = table.concat(sidecars, ", ")
 	local popup = InfoMessage:new({
 		text = _(sidecar_strings),

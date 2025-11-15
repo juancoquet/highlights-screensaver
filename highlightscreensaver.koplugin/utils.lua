@@ -62,12 +62,10 @@ function M.getAllSidecarPaths()
 	local sidecars = {}
 
 	local function searchDir(dir)
-		print("searching dir: " .. dir)
 		for member in lfs.dir(dir) do
 			if member == "." or member == ".." then
 				goto continue -- skip current and parent dirs
 			end
-			print("checking member: " .. member)
 
 			local path = dir .. "/" .. member
 			local attr = lfs.attributes(path)
