@@ -95,6 +95,15 @@ function HighlightScreensaver:addToScannableDirectories()
 	local currDir = lfs.currentdir()
 	table.insert(dirs, currDir)
 
+	local uniqueDirs = {}
+	local seen = {}
+	for _, dir in ipairs(dirs) do
+		if not seen[dir] then
+			table.insert(uniqueDirs, dir)
+			seen[dir] = true
+		end
+	end
+
 	local dir = getPluginDir()
 	local attr = lfs.attributes(dir)
 	if not attr then
@@ -108,13 +117,8 @@ function HighlightScreensaver:addToScannableDirectories()
 	if not fileWrite then
 		error("Failed to open scannable-dirs file: " .. tostring(err))
 	end
-	fileWrite:write(json.encode(dirs))
+	fileWrite:write(json.encode(uniqueDirs))
 	fileWrite:close()
-
-	local popup = InfoMessage:new({
-		text = _("wrote to " .. path),
-	})
-	UIManager:show(popup)
 end
 
 return HighlightScreensaver
