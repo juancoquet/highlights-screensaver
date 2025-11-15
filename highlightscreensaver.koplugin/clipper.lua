@@ -1,7 +1,5 @@
 local utils = require("utils")
 
-local M = {}
-
 ---@class Clipping
 ---@field text string
 ---@field note string|nil
@@ -12,8 +10,16 @@ local Clipping = {}
 Clipping.__index = Clipping
 
 ---@param self Clipping
+---@return string
 function Clipping:filename()
 	return utils.normalise(self.source_title .. " " .. self.created_at)
+end
+
+local M = {}
+
+---@param path string
+---@return Clipping
+function M.extractClipping(path)
 end
 
 return M
