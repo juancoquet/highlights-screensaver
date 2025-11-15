@@ -67,10 +67,52 @@ local function getPluginDir()
 	return getDefaultRootDir() .. "/onboard/highlight-screensaver"
 end
 
+local function makeDir(path)
+	local current = ""
+	for dir in path:gmatch("[^/]+") do
+		current = current .. "/" .. dir
+		local attr = lfs.attributes(current, "mode")
+		if not attr then
+			local ok, err = lfs.mkdir(current)
+			if not ok then
+				return nil, "Failed to create directory '" .. current .. "': " .. err
+			end
+		end
+	end
+	return true
+end
+
 function HighlightScreensaver:addToScannableDirectories()
-	-- local dirsFile = io.open(getPluginDir() .. "/scannable-dirs.json", "w")
+	local path = getPluginDir() .. "/scannable-dirs.json"
+	local fileRead = io.open(path, "r")
+	local contents = fileRead and fileRead:read("*a") or "[]"
+	if fileRead then
+		fileRead:close()
+	end
+
+	local json = require("json")
+	local dirs = json.decode(contents) or {}
+	local currDir = lfs.currentdir()
+	table.insert(dirs, currDir)
+
+	local dir = getPluginDir()
+	local attr = lfs.attributes(dir)
+	if not attr then
+		local ok, err = makeDir(getPluginDir())
+		if not ok then
+			error(tostring(err))
+		end
+	end
+
+	local fileWrite, err = io.open(path, "w")
+	if not fileWrite then
+		error("Failed to open scannable-dirs file: " .. tostring(err))
+	end
+	fileWrite:write(json.encode(dirs))
+	fileWrite:close()
+
 	local popup = InfoMessage:new({
-		text = _(getPluginDir()),
+		text = _("wrote to " .. path),
 	})
 	UIManager:show(popup)
 end
