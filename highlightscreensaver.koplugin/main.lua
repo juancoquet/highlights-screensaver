@@ -119,6 +119,11 @@ function HighlightScreensaver:addToScannableDirectories()
 	end
 	fileWrite:write(json.encode(uniqueDirs))
 	fileWrite:close()
+
+	local popup = InfoMessage:new({
+		text = _("Added to scannable directories: " .. currDir),
+	})
+	UIManager:show(popup)
 end
 
 return HighlightScreensaver
