@@ -40,10 +40,10 @@ end
 
 ---@return string[]
 function M.getScannableDirs()
-	local fileRead = io.open(M.getScannableDirsFilePath(), "r")
-	local contents = fileRead and fileRead:read("*a") or "[]"
-	if fileRead then
-		fileRead:close()
+	local file = io.open(M.getScannableDirsFilePath(), "r")
+	local contents = file and file:read("*a") or "[]"
+	if file then
+		file:close()
 	end
 
 	local dirs = json.decode(contents) or {}
@@ -57,7 +57,35 @@ function M.getScannableDirs()
 end
 
 ---@return string[]
-function M.getAllSidecarPaths() end
+function M.getAllSidecarPaths()
+	local scannable_dirs = M.getScannableDirs()
+	local sidecars = {}
+
+	local function searchDir(dir)
+		for member in lfs.dir(dir) do
+			if member == "." or member == ".." then
+				goto continue -- skip current and parent dirs
+			end
+
+			local path = dir .. "/" .. member
+			local attr = lfs.attributes(path)
+			if attr and attr.mode == "directory" then
+				if member:match("%s.sdr$") then
+					table.insert(sidecars, path)
+				else
+					searchDir(path)
+				end
+			end
+			::continue::
+		end
+	end
+
+	for _, dir in ipairs(scannable_dirs) do
+		searchDir(dir)
+	end
+
+	return sidecars
+end
 
 ---@param s string
 ---@return string
