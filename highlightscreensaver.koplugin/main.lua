@@ -42,8 +42,10 @@ function HighlightScreensaver:addToMainMenu(menu_items)
 end
 
 function HighlightScreensaver:scanHighlights()
+	local sidecars = utils.getAllSidecarPaths()
+	local sidecar_strings = table.concat(sidecars, ", ")
 	local popup = InfoMessage:new({
-		text = _("Highlight Screensaver popup"),
+		text = _(sidecar_strings),
 	})
 	UIManager:show(popup)
 end
