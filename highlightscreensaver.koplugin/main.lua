@@ -1,14 +1,71 @@
--- TODO: reimplement dispatcher integration
 local json = require("json")
+-- TODO: reimplement dispatcher integration
 local Dispatcher = require("dispatcher") -- luacheck:ignore
 local InfoMessage = require("ui/widget/infomessage")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local Screensaver = require("ui/screensaver")
+local Device = require("device")
+local Screen = Device.screen
 local _ = require("gettext")
 local lfs = require("libs/libkoreader-lfs")
 local utils = require("utils")
 local clipper = require("clipper")
+
+local HIGHLIGHTS_MODE = "highlights"
+
+-- patch `dofile` to add a highlights mode
+local orig_dofile = dofile
+_G.dofile = function(filepath)
+	local result = orig_dofile(filepath)
+
+	if filepath and filepath:match("screensaver_menu%.lua$") then
+		if result and result[1] and result[1].sub_item_table then
+      local sleep_screen_menu = result[1]
+			local wallpaper_submenu = sleep_screen_menu.sub_item_table
+
+			table.insert(wallpaper_submenu, 6, {
+				text = _("Show random highlight on sleep screen"),
+				checked_func = function()
+					return G_reader_settings:readSetting("screensaver_type") == HIGHLIGHTS_MODE
+				end,
+				callback = function()
+					G_reader_settings:saveSetting("screensaver_type", HIGHLIGHTS_MODE)
+				end,
+				radio = true,
+			})
+		end
+	end
+
+	return result
+end
+
+-- patch the screensaver's `show` function to handle the new highlights mode
+local og_screensaver_show = Screensaver.show
+Screensaver.show = function(self)
+	if self.screensaver_type == HIGHLIGHTS_MODE then
+		if self.screensaver_widget then
+			UIManager:close(self.screensaver_widget)
+			self.screensaver_widget = nil
+		end
+
+		Device.screen_saver_mode = true
+
+		local rotation_mode = Screen:getRotationMode()
+		Device.orig_rotation_mode = rotation_mode
+		if bit.band(rotation_mode, 1) == 1 then
+			Screen:setRotationMode(Screen.DEVICE_ROTATED_UPRIGHT)
+		else
+			Device.orig_rotation_mode = nil
+		end
+
+		-- TODO: create custom widget
+
+		return
+	end
+
+	og_screensaver_show(self)
+end
 
 local HighlightScreensaver = WidgetContainer:extend({
 	name = "Highlight Screensaver",
