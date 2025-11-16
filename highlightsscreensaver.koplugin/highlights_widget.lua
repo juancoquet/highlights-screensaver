@@ -18,10 +18,14 @@ local M = {}
 function M.buildHighlightsScreensaverWidget(clipping)
 	local col_fg, col_bg = Blitbuffer.COLOR_WHITE, Blitbuffer.COLOR_BLACK
 	local width = Screen:getWidth() * 0.90
+	local font_size_main = 24
+	local function fontSizeAlt()
+		return math.ceil(font_size_main * 0.75)
+	end
 
 	local highlight_text = TextBoxWidget:new({
 		text = clipping.text,
-		face = Font:getFace("cfont", 24),
+		face = Font:getFace("cfont", font_size_main),
 		width = width,
 		alignment = "left",
 		justified = true,
@@ -29,6 +33,19 @@ function M.buildHighlightsScreensaverWidget(clipping)
 		fgcolor = col_fg,
 		bgcolor = col_bg,
 	})
+	while highlight_text:getSize().h > Screen:getHeight() * 0.8 do
+		font_size_main = font_size_main - 2
+		highlight_text = TextBoxWidget:new({
+			text = clipping.text,
+			face = Font:getFace("cfont", font_size_main),
+			width = width,
+			alignment = "left",
+			justified = true,
+			line_height = 0.5,
+			fgcolor = col_fg,
+			bgcolor = col_bg,
+		})
+	end
 	local left_border = LineWidget:new({
 		dimen = Geom:new({
 			w = Size.border.thick,
@@ -49,7 +66,7 @@ function M.buildHighlightsScreensaverWidget(clipping)
 
 	local source_text = TextBoxWidget:new({
 		text = "— " .. clipping.source_title .. author_suffix,
-		face = Font:getFace("infofont", 18),
+		face = Font:getFace("infofont", fontSizeAlt()),
 		width = width,
 		fgcolor = col_fg,
 		bgcolor = col_bg,
@@ -72,7 +89,7 @@ function M.buildHighlightsScreensaverWidget(clipping)
 		})
 		local note_text = TextBoxWidget:new({
 			text = clipping.note,
-			face = Font:getFace("cfont", 18),
+			face = Font:getFace("cfont", fontSizeAlt()),
 			width = width,
 			fgcolor = col_fg,
 			bgcolor = col_bg,
