@@ -1,8 +1,5 @@
-local Blitbuffer = require("ffi/blitbuffer")
-local json = require("json")
 -- TODO: reimplement dispatcher integration
 local Dispatcher = require("dispatcher") -- luacheck:ignore
-local FileManager = require("apps/filemanager/filemanager")
 local InfoMessage = require("ui/widget/infomessage")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
@@ -10,49 +7,10 @@ local Screensaver = require("ui/screensaver")
 local Device = require("device")
 local Screen = Device.screen
 local _ = require("gettext")
-local lfs = require("libs/libkoreader-lfs")
-local utils = require("utils")
 local highlightsWidget = require("highlights_widget")
 local scan = require("scan")
 
 local HIGHLIGHTS_MODE = "highlights"
-
-local function addToScannableDirectories()
-	local scannable_dirs = utils.getScannableDirs()
-	local curr_dir = FileManager.instance.file_chooser.path
-	-- local curr_dir = self.ui.file_chooser.path
-	table.insert(scannable_dirs, curr_dir)
-
-	local unique_dirs = {}
-	local seen = {}
-	for _, dir in ipairs(scannable_dirs) do
-		if not seen[dir] then
-			table.insert(unique_dirs, dir)
-			seen[dir] = true
-		end
-	end
-
-	local dir = utils.getPluginDir()
-	local attr = lfs.attributes(dir)
-	if not attr then
-		local ok, err = utils.makeDir(utils.getPluginDir())
-		if not ok then
-			error(tostring(err))
-		end
-	end
-
-	local file, err = io.open(utils.getScannableDirsFilePath(), "w")
-	if not file then
-		error("Failed to open scannable-dirs file: " .. tostring(err))
-	end
-	file:write(json.encode(unique_dirs))
-	file:close()
-
-	local popup = InfoMessage:new({
-		text = _("Added to scannable directories: " .. curr_dir),
-	})
-	UIManager:show(popup)
-end
 
 -- patch `dofile` to add a highlights mode
 local orig_dofile = dofile
@@ -79,7 +37,7 @@ _G.dofile = function(filepath)
 					{
 						text = _("Add to scannable directories"),
 						callback = function()
-							addToScannableDirectories()
+							scan.addToScannableDirectories()
 						end,
 					},
 				},
