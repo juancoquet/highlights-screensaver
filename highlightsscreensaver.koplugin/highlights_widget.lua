@@ -22,7 +22,7 @@ function M.buildHighlightsScreensaverWidget(clipping)
 	local function fontSizeAlt()
 		return math.ceil(font_size_main * 0.75)
 	end
-	local font_name = "Bookerly"
+	local font_name = "NotoSerif-Bold.ttf"
 
 	local highlight_text = TextBoxWidget:new({
 		text = clipping.text,
