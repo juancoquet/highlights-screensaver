@@ -42,8 +42,13 @@ function M.buildHighlightsScreensaverWidget(clipping)
 		highlight_text,
 	})
 
+	local author_suffix = ""
+	if clipping.source_author and clipping.source_author ~= "" then
+		author_suffix = ", " .. clipping.source_author
+	end
+
 	local source_text = TextBoxWidget:new({
-		text = "— " .. clipping.source_title .. ", " .. clipping.source_author,
+		text = "— " .. clipping.source_title .. author_suffix,
 		face = Font:getFace("infofont", 18),
 		width = width,
 		fgcolor = col_fg,
