@@ -6,6 +6,7 @@ local TextWidget = require("ui/widget/textwidget")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local Device = require("device")
 local Screen = Device.screen
+local ScreenSaverWidget = require("ui/widget/screensaverwidget")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
 
@@ -29,7 +30,7 @@ function M.buildHighlightsScreensaverWidget()
 		alignment = "center",
 	})
 	local source_text = TextWidget:new({
-		text = "— " .. clipping.source_title ..", ".. clipping.source_author,
+		text = "— " .. clipping.source_title .. ", " .. clipping.source_author,
 		face = Font:getFace("infofont", 18),
 	})
 
@@ -47,10 +48,17 @@ function M.buildHighlightsScreensaverWidget()
 		content,
 	})
 
-	return CenterContainer:new({
+	local container = CenterContainer:new({
 		dimen = Screen:getSize(),
 		frame,
 	})
+	local screensaver_widget = ScreenSaverWidget:new({
+		widget = container,
+		background = Blitbuffer.COLOR_WHITE,
+		covers_fullscreen = true,
+	})
+
+	return screensaver_widget
 end
 
 return M
