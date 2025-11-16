@@ -10,6 +10,7 @@ local _ = require("gettext")
 local highlightsWidget = require("highlights_widget")
 local scan = require("scan")
 local clipper = require("clipper")
+local utils = require("utils")
 
 local HIGHLIGHTS_MODE = "highlights"
 
@@ -79,6 +80,15 @@ Screensaver.show = function(self)
 			Device.orig_rotation_mode = nil
 		end
 
+		local last_scanned = utils.getLastScannedDate()
+		if not last_scanned or last_scanned < os.date("%Y-%m-%d") then
+			scan.scanHighlights()
+		end
+
+		-- TODO: disable last highlight
+		---- note that highlight logic has to take into account already disabled highlights.
+		---- that means reading in the existing clipping before overwriting it, using the clipping's enabled
+		---- state during the overwrite
 		local clipping = clipper.getRandomClipping()
 		self.screensaver_widget = highlightsWidget.buildHighlightsScreensaverWidget(clipping)
 		self.screensaver_widget.modal = true
