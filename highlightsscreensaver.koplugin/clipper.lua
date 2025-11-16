@@ -121,6 +121,7 @@ function M.getRandomClipping()
 	end
 
 	local clipping = M.getClipping(chosenFile)
+  clipping = M.getClipping("cities_and_ambition_2025-11-12_102322.json")
 	return clipping or fallback_clipping
 end
 
