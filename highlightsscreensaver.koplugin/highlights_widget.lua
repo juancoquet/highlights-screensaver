@@ -22,11 +22,12 @@ function M.buildHighlightsScreensaverWidget(clipping)
 	local function fontSizeAlt()
 		return math.ceil(font_size_main * 0.75)
 	end
-	local font_name = "NotoSerif-Bold.ttf"
+	local font_name_main = "SourceSerif4-Bold.ttf"
+  local font_name_other = "SourceSerif4-Regular.ttf"
 
 	local highlight_text = TextBoxWidget:new({
 		text = clipping.text,
-		face = Font:getFace(font_name, font_size_main),
+		face = Font:getFace(font_name_main, font_size_main),
 		width = width,
 		alignment = "left",
 		justified = true,
@@ -38,7 +39,7 @@ function M.buildHighlightsScreensaverWidget(clipping)
 		font_size_main = font_size_main - 2
 		highlight_text = TextBoxWidget:new({
 			text = clipping.text,
-			face = Font:getFace(font_name, font_size_main),
+			face = Font:getFace(font_name_main, font_size_main),
 			width = width,
 			alignment = "left",
 			justified = true,
@@ -67,7 +68,7 @@ function M.buildHighlightsScreensaverWidget(clipping)
 
 	local source_text = TextBoxWidget:new({
 		text = "— " .. clipping.source_title .. author_suffix,
-		face = Font:getFace("infofont", fontSizeAlt()),
+		face = Font:getFace(font_name_other, fontSizeAlt()),
 		width = width,
 		fgcolor = col_fg,
 		bgcolor = col_bg,
@@ -90,7 +91,7 @@ function M.buildHighlightsScreensaverWidget(clipping)
 		})
 		local note_text = TextBoxWidget:new({
 			text = clipping.note,
-			face = Font:getFace(font_name, fontSizeAlt()),
+			face = Font:getFace(font_name_main, fontSizeAlt()),
 			width = width,
 			fgcolor = col_fg,
 			bgcolor = col_bg,
