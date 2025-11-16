@@ -29,10 +29,11 @@ function M.buildHighlightsScreensaverWidget()
 		true
 	)
 	local col_fg, col_bg = Blitbuffer.COLOR_WHITE, Blitbuffer.COLOR_BLACK
+
 	local highlight_text = TextBoxWidget:new({
 		text = clipping.text,
 		face = Font:getFace("cfont", 24),
-		width = Screen:getWidth() * 0.9,
+		width = Screen:getWidth() * 0.90,
 		alignment = "left",
 		justified = true,
 		line_height = 0.5,
@@ -55,8 +56,8 @@ function M.buildHighlightsScreensaverWidget()
 	local source_text = TextWidget:new({
 		text = "— " .. clipping.source_title .. ", " .. clipping.source_author,
 		face = Font:getFace("infofont", 18),
-    fgcolor = col_fg,
-    bgcolor = col_bg
+		fgcolor = col_fg,
+		bgcolor = col_bg,
 	})
 
 	local content = VerticalGroup:new({
@@ -65,21 +66,16 @@ function M.buildHighlightsScreensaverWidget()
 		source_text,
 	})
 
-	local frame = FrameContainer:new({
-		radius = 0,
-		bordersize = 0,
-		padding = 20,
-		background = col_bg,
-		content,
-	})
-
 	local container = CenterContainer:new({
 		dimen = Screen:getSize(),
-		frame,
+		content,
+		padding = 0,
+		margin = 0,
+		bgcolor = col_bg,
 	})
 	local screensaver_widget = ScreenSaverWidget:new({
 		widget = container,
-		background = Blitbuffer.COLOR_WHITE,
+		background = col_bg,
 		covers_fullscreen = true,
 	})
 
