@@ -17,6 +17,12 @@ function M.scanHighlights()
 			clipper.saveClipping(clipping)
 		end
 	end
+
+	local file = assert(io.open(utils.getLastScannedDateFilePath(), "w"))
+	local t = os.date("*t")
+	local today = string.format("%04d-%02d-%02d", t.year, t.month, t.day)
+	file:write(today)
+	file:close()
 end
 
 function M.addToScannableDirectories()

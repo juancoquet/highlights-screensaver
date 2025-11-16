@@ -81,7 +81,9 @@ Screensaver.show = function(self)
 		end
 
 		local last_scanned = utils.getLastScannedDate()
-		if not last_scanned or last_scanned < os.date("%Y-%m-%d") then
+		local t = os.date("*t")
+		local today = string.format("%04d-%02d-%02d", t.year, t.month, t.day)
+		if not last_scanned or last_scanned < today then
 			scan.scanHighlights()
 		end
 
