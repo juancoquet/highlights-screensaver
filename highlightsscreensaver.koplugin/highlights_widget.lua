@@ -16,17 +16,13 @@ local LineWidget = require("ui/widget/linewidget")
 local M = {}
 
 function M.buildHighlightsScreensaverWidget(clipping)
-	local col_fg, col_bg = Blitbuffer.COLOR_BLACK, Blitbuffer.COLOR_WHITE
+	local col_fg, col_bg = Blitbuffer.COLOR_WHITE, Blitbuffer.COLOR_BLACK
 	local width = Screen:getWidth() * 0.90
 	local font_size_main = 48
 	local function fontSizeAlt()
 		return math.ceil(font_size_main * 0.75)
 	end
-	local font_name = "cfont"
-	local user_ui_font = G_reader_settings:readSetting("ui_font")
-	if user_ui_font then
-		font_name = user_ui_font
-	end
+	local font_name = "Bookerly"
 
 	local highlight_text = TextBoxWidget:new({
 		text = clipping.text,
