@@ -53,7 +53,7 @@ function M.buildHighlightsScreensaverWidget(clipping)
 
 	local content = VerticalGroup:new({
 		highlight_group,
-		VerticalSpan:new({ width = 20 }),
+		VerticalSpan:new({ width = 24 }),
 		source_text,
 	})
 
@@ -74,9 +74,9 @@ function M.buildHighlightsScreensaverWidget(clipping)
 			alignment = "left",
 			line_height = 0.4,
 		})
-		table.insert(content, VerticalSpan:new({ width = 40 }))
+		table.insert(content, VerticalSpan:new({ width = 32 }))
 		table.insert(content, separator)
-		table.insert(content, VerticalSpan:new({ width = 20 }))
+		table.insert(content, VerticalSpan:new({ width = 24 }))
 		table.insert(content, note_text)
 	end
 
