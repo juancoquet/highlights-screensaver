@@ -1,3 +1,4 @@
+local _ = require("gettext")
 local FileManager = require("apps/filemanager/filemanager")
 local InfoMessage = require("ui/widget/infomessage")
 local json = require("json")
