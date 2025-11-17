@@ -23,8 +23,8 @@ end
 
 ---@return Config
 function Config.load()
-    local file = io.open(getConfigFilePath(), "r")
     local default_config = setmetatable({ theme = M.Theme.DARK, scannable_directories = {} }, Config)
+    local file = io.open(getConfigFilePath(), "r")
     if not file then
         return default_config
     end
