@@ -8,8 +8,9 @@ local _ = require("gettext")
 local highlightsWidget = require("highlights_widget")
 local scan = require("scan")
 local clipper = require("clipper")
-local utils = require("utils")
 local config = require("config")
+local ffiUtil = require("ffi/util")  
+local T = ffiUtil.template
 
 local HIGHLIGHTS_MODE = "highlights"
 G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_QUOTE_SETTING, "NotoSerif-BoldItalic.ttf")
@@ -64,7 +65,11 @@ _G.dofile = function(filepath)
 						end,
 					},
 					{
-						text = _("Theme"),
+						text_func = function()
+							local theme = config.getTheme()
+							local theme_name = theme:sub(1, 1):upper() .. theme:sub(2)
+							return T(_("Theme: %1"), _(theme_name))
+						end,
 						sub_item_table = {
 							{
 								text = _("Dark"),
