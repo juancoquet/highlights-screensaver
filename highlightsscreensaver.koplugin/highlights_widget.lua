@@ -4,6 +4,7 @@ local Font = require("ui/font")
 local Geom = require("ui/geometry")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local Device = require("device")
+local config = require("config")
 local Screen = Device.screen
 local ScreenSaverWidget = require("ui/widget/screensaverwidget")
 local Size = require("ui/size")
@@ -19,11 +20,22 @@ M.FONT_NAME_AUTHOR_SETTING = "highliths_screensaver_font_name_author"
 M.FONT_NAME_NOTE_SETTING = "highliths_screensaver_font_name_note"
 
 function M.buildHighlightsScreensaverWidget(clipping)
-	local col_fg, col_bg = Blitbuffer.COLOR_WHITE, Blitbuffer.COLOR_BLACK
-	local width = Screen:getWidth() * 0.90
+	local theme = config.getTheme()
+	local col_fg, col_bg
+	if theme == config.Theme.DARK then
+		col_fg = Blitbuffer.COLOR_WHITE
+		col_bg = Blitbuffer.COLOR_BLACK
+	else
+		col_fg = Blitbuffer.COLOR_BLACK
+		col_bg = Blitbuffer.COLOR_WHITE
+	end
+
+	-- TODO: move fonts to config
 	local font_name_quote = G_reader_settings:readSetting(M.FONT_NAME_QUOTE_SETTING)
 	local font_name_author = G_reader_settings:readSetting(M.FONT_NAME_AUTHOR_SETTING)
 	local font_name_note = G_reader_settings:readSetting(M.FONT_NAME_NOTE_SETTING)
+
+	local width = Screen:getWidth() * 0.90
 
 	local function buildContent(base_font_size)
 		local function fontSizeAlt()

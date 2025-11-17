@@ -8,7 +8,9 @@ local _ = require("gettext")
 local highlightsWidget = require("highlights_widget")
 local scan = require("scan")
 local clipper = require("clipper")
-local utils = require("utils")
+local config = require("config")
+local ffiUtil = require("ffi/util")  
+local T = ffiUtil.template
 
 local HIGHLIGHTS_MODE = "highlights"
 G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_QUOTE_SETTING, "NotoSerif-BoldItalic.ttf")
@@ -46,11 +48,14 @@ _G.dofile = function(filepath)
 					{
 						text = _("Disable last shown highlight"),
 						callback = function()
-							local fname = utils.getLastShownHighlightFileName()
+							local fname = config.getLastShownHighlight()
 							if not fname then
 								return
 							end
 							local clipping = clipper.getClipping(fname)
+							if not clipping then
+								return
+							end
 							clipping.enabled = false
 							clipper.saveClipping(clipping)
 							local popup = InfoMessage:new({
@@ -58,6 +63,36 @@ _G.dofile = function(filepath)
 							})
 							UIManager:show(popup)
 						end,
+					},
+					{
+						text_func = function()
+							local theme = config.getTheme()
+							local theme_name = theme:sub(1, 1):upper() .. theme:sub(2)
+							return T(_("Theme: %1"), _(theme_name))
+						end,
+						sub_item_table = {
+							{
+								text = _("Dark"),
+								checked_func = function()
+									return config.getTheme() == config.Theme.DARK
+								end,
+								callback = function()
+									return config.setTheme(config.Theme.DARK)
+								end,
+								radio = true,
+
+							},
+							{
+								text = _("Light"),
+								checked_func = function()
+									return config.getTheme() == config.Theme.LIGHT
+								end,
+								callback = function()
+									return config.setTheme(config.Theme.LIGHT)
+								end,
+								radio = true,
+							},
+						},
 					},
 				},
 			})
@@ -97,7 +132,7 @@ Screensaver.show = function(self)
 			Device.orig_rotation_mode = nil
 		end
 
-		local last_scanned = utils.getLastScannedDate()
+		local last_scanned = config.getLastScannedDate()
 		local t = os.date("*t")
 		local today = string.format("%04d-%02d-%02d", t.year, t.month, t.day)
 		if not last_scanned or last_scanned < today then
@@ -105,7 +140,7 @@ Screensaver.show = function(self)
 		end
 
 		local clipping = clipper.getRandomClipping()
-		utils.setLastShownHighlight(clipping)
+		config.setLastShownHighlight(clipping:filename())
 		self.screensaver_widget = highlightsWidget.buildHighlightsScreensaverWidget(clipping)
 		self.screensaver_widget.modal = true
 		self.screensaver_widget.dithered = true
