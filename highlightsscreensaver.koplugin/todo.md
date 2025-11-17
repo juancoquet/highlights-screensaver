@@ -1,8 +1,0 @@
-- [-] unify config
-    - [x] scannable dirs
-    - [x] last scanned date
-    - [x] last shown highlight
-    - [x] theme
-- [x] refactor menu building fns
-- [x] fonts
-- [x] light/dark mode
