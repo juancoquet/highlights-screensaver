@@ -17,6 +17,15 @@ G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_QUOTE_SETTING, "NotoSer
 G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_AUTHOR_SETTING, "NotoSerif-Regular.ttf")
 G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_NOTE_SETTING, "NotoSerif-Bold.ttf")
 
+local function buildMenuAddScannableDirectory()
+	return {
+		text = _("Add current directory to scannable directories"),
+		callback = function()
+			scan.addToScannableDirectories()
+		end,
+	}
+end
+
 local function buildMenuDisableHighlight()
 	return {
 		text = _("Disable last shown highlight"),
@@ -93,12 +102,7 @@ _G.dofile = function(filepath)
 							UIManager:show(popup)
 						end,
 					},
-					{
-						text = _("Add current directory to scannable directories"),
-						callback = function()
-							scan.addToScannableDirectories()
-						end,
-					},
+					buildMenuAddScannableDirectory(),
 					buildMenuDisableHighlight(),
 					buildMenuTheme()
 					,
