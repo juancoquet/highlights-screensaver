@@ -76,4 +76,11 @@ function M.getLastScannedDate()
     return config.last_scanned_date
 end
 
+---@param date string
+function M.setLastScannedDate(date)
+    local config = load()
+    config.last_scanned_date = date
+    config:save()
+end
+
 return M
