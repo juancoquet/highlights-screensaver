@@ -42,9 +42,9 @@ end
 
 function M.scanHighlights()
 	utils.makeDir(utils.getPluginDir())
-	local conf = config.load()
+	local scannable_directories = config.getScannableDirectories()
 
-	local sidecars = getAllSidecarPaths(conf.scannable_directories)
+	local sidecars = getAllSidecarPaths(scannable_directories)
 	for _, sidecar in ipairs(sidecars) do
 		local clippings = clipper.extractClippingsFromSidecar(sidecar)
 		for _, clipping in ipairs(clippings) do
