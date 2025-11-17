@@ -42,6 +42,19 @@ function Config.load()
     }, Config)
 end
 
+function Config:save()
+    local copy = {}
+    for k, v in pairs(self) do
+        copy[k] = v
+    end
+    setmetatable(copy, nil)
+    local content = json.encode(copy, { indent = true })
+    utils.makeDir(utils.getPluginDir())
+    local file = assert(io.open(getConfigFilePath(), "w"))
+    file:write(content)
+    file:close()
+end
+
 M.Config = Config
 
 return M
