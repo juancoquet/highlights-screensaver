@@ -14,6 +14,7 @@ M.Theme = {
 ---@class Config
 ---@field theme Theme
 ---@field scannable_directories string[]
+---@field last_scanned_date string|nil
 local Config = {}
 Config.__index = Config
 
@@ -39,6 +40,7 @@ function M.load()
     return setmetatable({
         theme = data.theme or M.Theme.DARK,
         scannable_directories = data.scannable_directories or {},
+        last_scanned_date = data.last_scanned_date or nil
     }, Config)
 end
 
