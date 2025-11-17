@@ -17,6 +17,28 @@ G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_QUOTE_SETTING, "NotoSer
 G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_AUTHOR_SETTING, "NotoSerif-Regular.ttf")
 G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_NOTE_SETTING, "NotoSerif-Bold.ttf")
 
+local function buildMenuDisableHighlight()
+	return {
+		text = _("Disable last shown highlight"),
+		callback = function()
+			local fname = config.getLastShownHighlight()
+			if not fname then
+				return
+			end
+			local clipping = clipper.getClipping(fname)
+			if not clipping then
+				return
+			end
+			clipping.enabled = false
+			clipper.saveClipping(clipping)
+			local popup = InfoMessage:new({
+				text = _("Disabled highlight: " .. clipping:filename()),
+			})
+			UIManager:show(popup)
+		end,
+	}
+end
+
 local function buildMenuTheme()
 	local dark = {
 		text = _("Dark"),
@@ -77,25 +99,7 @@ _G.dofile = function(filepath)
 							scan.addToScannableDirectories()
 						end,
 					},
-					{
-						text = _("Disable last shown highlight"),
-						callback = function()
-							local fname = config.getLastShownHighlight()
-							if not fname then
-								return
-							end
-							local clipping = clipper.getClipping(fname)
-							if not clipping then
-								return
-							end
-							clipping.enabled = false
-							clipper.saveClipping(clipping)
-							local popup = InfoMessage:new({
-								text = _("Disabled highlight: " .. clipping:filename()),
-							})
-							UIManager:show(popup)
-						end,
-					},
+					buildMenuDisableHighlight(),
 					buildMenuTheme()
 					,
 				},
