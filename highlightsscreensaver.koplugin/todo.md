@@ -1,0 +1,3 @@
+- [-] unify config
+- [ ] fonts
+- [ ] light/dark mode
