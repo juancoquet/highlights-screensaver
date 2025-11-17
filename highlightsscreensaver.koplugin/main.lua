@@ -11,11 +11,12 @@ local clipper = require("clipper")
 local config = require("config")
 local ffiUtil = require("ffi/util")
 local T = ffiUtil.template
+local BD = require("ui/bidi")
+local FontList = require("fontlist")
+local Font = require("ui/font")
+local cre = require("document/credocument"):engineInit()
 
 local HIGHLIGHTS_MODE = "highlights"
-G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_QUOTE_SETTING, "NotoSerif-BoldItalic.ttf")
-G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_AUTHOR_SETTING, "NotoSerif-Regular.ttf")
-G_reader_settings:saveSetting(highlightsWidget.FONT_NAME_NOTE_SETTING, "NotoSerif-Bold.ttf")
 
 local function buildMenuScanHighlights()
 	return {
@@ -70,7 +71,6 @@ local function buildMenuTheme()
 			return config.setTheme(config.Theme.DARK)
 		end,
 		radio = true,
-
 	}
 	local light = {
 		text = _("Light"),
@@ -92,6 +92,44 @@ local function buildMenuTheme()
 	}
 end
 
+local function buildMenuFonts()
+	local all_fonts = FontList:getFontList()
+	local curr_fonts = config.getFonts()
+
+	local function buildFontSubmenu(display_name, font_key)
+		local submenu = {
+			text_func = function()
+				return display_name .. ": " .. curr_fonts[font_key]
+			end,
+			sub_item_table = {},
+		}
+
+		for _, font_path in ipairs(all_fonts) do
+			local _, font_filename = require("util").splitFilePathName(font_path)
+			table.insert(submenu.sub_item_table, {
+				text = font_filename,
+				callback = function()
+					curr_fonts[font_key] = font_filename
+					config.setFonts(curr_fonts)
+				end,
+				checked_func = function()
+					return font_filename == curr_fonts[font_key]
+				end,
+			})
+		end
+
+		return submenu
+	end
+
+	local quote = buildFontSubmenu("Quote", "quote")
+	local author = buildFontSubmenu("Author", "author")
+	local note = buildFontSubmenu("Note", "note")
+	return {
+		text = "Fonts",
+		sub_item_table = { quote, author, note },
+	}
+end
+
 -- patch `dofile` to add a highlights mode
 local orig_dofile = dofile
 _G.dofile = function(filepath)
@@ -107,8 +145,8 @@ _G.dofile = function(filepath)
 					buildMenuScanHighlights(),
 					buildMenuAddScannableDirectory(),
 					buildMenuDisableHighlight(),
-					buildMenuTheme()
-					,
+					buildMenuTheme(),
+					buildMenuFonts(),
 				},
 			})
 

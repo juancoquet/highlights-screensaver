@@ -3,6 +3,6 @@
     - [x] last scanned date
     - [x] last shown highlight
     - [x] theme
-- [ ] refactor menu building fns
-- [ ] fonts
+- [x] refactor menu building fns
+- [x] fonts
 - [x] light/dark mode
