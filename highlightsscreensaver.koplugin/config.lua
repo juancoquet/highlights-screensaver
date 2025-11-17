@@ -8,14 +8,22 @@ local M = {}
 ---| '"light"'
 M.Theme = {
     DARK = "dark",
-    LIGHT = "light"
+    LIGHT = "light",
 }
+
+---@class Fonts
+---@field quote string
+---@field author string
+---@field note string
+local Fonts = {}
+Fonts.__index = Fonts
 
 ---@class Config
 ---@field theme Theme
 ---@field scannable_directories string[]
 ---@field last_scanned_date string|nil
 ---@field last_shown_highlight string|nil
+---@field fonts Fonts
 local Config = {}
 Config.__index = Config
 
@@ -25,8 +33,23 @@ end
 
 ---@return Config
 local function load()
+    local default_fonts = setmetatable(
+        {
+            quote = "NotoSerif-BoldItalic.ttf",
+            author = "NotoSerif-Regular.ttf",
+            note = "NotoSerif-Bold.ttf",
+        }, Fonts
+    )
     local default_config = setmetatable(
-        { theme = M.Theme.DARK, scannable_directories = {}, last_scanned_date = nil, last_shown_highlight = nil }, Config)
+        {
+            theme = M.Theme.DARK,
+            scannable_directories = {},
+            last_scanned_date = nil,
+            last_shown_highlight = nil,
+            fonts = default_fonts,
+        },
+        Config
+    )
 
     local file = io.open(getConfigFilePath(), "r")
     if not file then
@@ -45,15 +68,24 @@ local function load()
         scannable_directories = data.scannable_directories or {},
         last_scanned_date = data.last_scanned_date or nil,
         last_shown_highlight = data.last_shown_highlight or nil,
+        fonts = data.fonts or default_fonts,
     }, Config)
 end
 
-function Config:save()
+local function deep_copy_no_mt(tbl)
     local copy = {}
-    for k, v in pairs(self) do
-        copy[k] = v
+    for k, v in pairs(tbl) do
+        if type(v) == "table" then
+            copy[k] = deep_copy_no_mt(v)
+        else
+            copy[k] = v
+        end
     end
-    setmetatable(copy, nil)
+    return copy
+end
+
+function Config:save()
+    local copy = deep_copy_no_mt(self)
     local content = json.encode(copy, { indent = true })
     utils.makeDir(utils.getPluginDir())
     local file = assert(io.open(getConfigFilePath(), "w"))
