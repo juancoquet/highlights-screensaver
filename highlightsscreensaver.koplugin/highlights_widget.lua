@@ -53,7 +53,7 @@ function M.buildHighlightsScreensaverWidget(clipping)
 		})
 		local highlight_group = HorizontalGroup:new({
 			left_border,
-			HorizontalSpan:new({ width = 20 }),
+			HorizontalSpan:new({ width = 30 }),
 			highlight_text,
 		})
 
