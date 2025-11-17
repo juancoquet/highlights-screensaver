@@ -16,7 +16,7 @@ end
 
 ---@return string
 function M.getPluginDir()
-	return M.getDefaultRootDir() .. "/onboard/highlight-screensaver"
+	return M.getDefaultRootDir() .. "/onboard/highlights-screensaver"
 end
 
 ---@return string
