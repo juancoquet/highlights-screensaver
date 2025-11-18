@@ -22,7 +22,7 @@ Highlights Screensaver replaces your sleep screen wallpaper with a randomly sele
 ### Setup instructions
 1. In the settings menu (the cog icon), go to `Screen > Sleep screen > Wallpaper`. Select "Show highlights screensaver".
 
-Next we will set up the directories which Highlights Screensaver will scan book highlights.
+Next we will set up the directories which Highlights Screensaver will scan for book highlights.
 
 2. Navigate to wherever your books are stored.
 3. In the settings menu, go to `Screen > Sleep screen > Highlights screensaver`. Select "Add current directory to scannable directories".
