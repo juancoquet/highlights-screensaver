@@ -5,6 +5,9 @@ A KOReader plugin to show a random highlight on your screensaver
 Highlights Screensaver replaces your sleep screen wallpaper with a randomly selected highlight from one of the books in your library.
 
 ### Example images
+![Light theme example 1](images/light_01.JPG)
+![Light theme example 2](images/light_02.JPG)
+![Dark theme example 2](images/dark_01.JPG)
 
 ## Features
 - Shows you the original quote, source (book & author), and any notes you have attached to a highlight.
