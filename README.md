@@ -20,7 +20,7 @@ Highlights Screensaver replaces your sleep screen wallpaper with a randomly sele
 ## Installation & setup
 1. Download the latest `HighlightsScreensaver.zip` from the releases page and unzip the contents.
 2. Copy the `highlightsscreensaver.koplugin` directory into `koreader/plugins/` on your device.
-3. Restart KOReader and setup the plugin.
+3. Restart KOReader and setup the plugin following the instructions below.
 
 ### Setup instructions
 1. In the settings menu (the cog icon), go to `Screen > Sleep screen > Wallpaper`. Select "Show highlights screensaver".
